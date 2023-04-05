@@ -29,6 +29,9 @@ on:
       - release-*
       - feature/*
 
+permissions:
+  contents: read
+
 jobs:
   validate-virt-mem:
     name: Standalone validations

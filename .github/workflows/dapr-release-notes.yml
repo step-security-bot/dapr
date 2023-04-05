@@ -15,8 +15,13 @@ name: dapr-release-notes
 
 on:
   workflow_dispatch:
+permissions:
+  contents: read
+
 jobs:
   build:
+    permissions:
+      contents: write  # for Git to git push
     name: Generate release notes
     runs-on: ubuntu-latest
     steps:

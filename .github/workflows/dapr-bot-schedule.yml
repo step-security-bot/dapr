@@ -17,6 +17,9 @@ on:
   schedule:
     - cron: '*/10 * * * *'
   workflow_dispatch:
+permissions:
+  contents: read
+
 jobs:
   automerge:
     if: github.repository_owner == 'dapr'

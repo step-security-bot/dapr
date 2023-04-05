@@ -21,6 +21,9 @@ on:
         required: true 
         type: string
 
+permissions:
+  contents: read
+
 jobs:
   create-release:
     name: Creates release branch and tag

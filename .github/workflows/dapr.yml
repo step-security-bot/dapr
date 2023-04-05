@@ -29,8 +29,14 @@ on:
       - master
       - release-*
       - feature/*
+permissions:
+  contents: read
+
 jobs:
   build:
+    permissions:
+      contents: read  # for actions/checkout to fetch code
+      pull-requests: read  # for golangci/golangci-lint-action to fetch pull requests
     name: "Build and test on ${{ matrix.job_name }}"
     runs-on: "${{ matrix.os }}"
     env:
@@ -461,6 +467,8 @@ jobs:
   # helm charts package.
   # This does not run on forks
   helmpublish:
+    permissions:
+      contents: write  # for Git to git push
     name: Publish helm charts to Helm github pages repo
     needs: publish
     if: startswith(github.ref, 'refs/tags/v') && github.repository_owner == 'dapr'
