@@ -54,6 +54,11 @@ jobs:
     name: Deploy test infrastructure
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Set up for scheduled test
         if: github.event_name != 'repository_dispatch'
         run: |
@@ -194,6 +199,11 @@ jobs:
       TARGET_OS: linux
       TARGET_ARCH: amd64
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Set up for scheduled test
         if: github.event_name != 'repository_dispatch'
         run: |
@@ -333,6 +343,11 @@ jobs:
       AZURE_STORAGE_ACCESS_KEY: ${{ secrets.PERF_AZURE_STORAGE_KEY }}
       PULL_POLICY: IfNotPresent
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Setup test output
         run: |
           export TEST_OUTPUT_FILE_PREFIX=$GITHUB_WORKSPACE/test_report
@@ -523,6 +538,11 @@ jobs:
       - test-perf
     if: always()
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
