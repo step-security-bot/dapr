@@ -19,6 +19,9 @@ on:
     # Run weekly on Tuesdays
     - cron: "22 03 * * 2"
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: build dev container
