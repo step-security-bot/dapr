@@ -9,67 +9,72 @@ jobs:
   mirror:
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - 
         name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
       - # ghcr logins for pushing image after testing
         name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
         name: Login to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0
         with:
           username: ${{ secrets.DOCKER_REGISTRY_ID }}
           password: ${{ secrets.DOCKER_REGISTRY_PASS }}
       - # copy 3rd party zookeeper image from dockerhub to ghcr
         name: Push Image (zookeeper) to target registries
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@f973043dc002b8e5a772c53e79441e6e1861e874 # v2.0.0
         with:
           src: wurstmeister/zookeeper:latest
           dst: |
             ghcr.io/${{ github.repository_owner }}/3rdparty/zookeeper:latest
       - # copy 3rd party kafka image from dockerhub to ghcr
         name: Push Image (kafka) to target registries
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@f973043dc002b8e5a772c53e79441e6e1861e874 # v2.0.0
         with:
           src: wurstmeister/kafka:latest
           dst: |
             ghcr.io/${{ github.repository_owner }}/3rdparty/kafka:latest
       - # copy 3rd party redis image from dockerhub to ghcr
         name: Push Image (redis) to target registries
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@f973043dc002b8e5a772c53e79441e6e1861e874 # v2.0.0
         with:
           src: redis:latest
           dst: |
             ghcr.io/${{ github.repository_owner }}/3rdparty/redis:latest
       - # copy 3rd party redis v6 image from dockerhub to ghcr
         name: Push Image (redis) to target registries
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@f973043dc002b8e5a772c53e79441e6e1861e874 # v2.0.0
         with:
           src: redis:6
           dst: |
             ghcr.io/${{ github.repository_owner }}/3rdparty/redis:6
       - # copy 3rd party rejson image from dockerhub to ghcr
         name: Push Image (rejson) to target registries
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@f973043dc002b8e5a772c53e79441e6e1861e874 # v2.0.0
         with:
           src: redislabs/rejson:latest
           dst: |
             ghcr.io/${{ github.repository_owner }}/3rdparty/rejson:latest
       - # copy 3rd party zipkin image from dockerhub to ghcr
         name: Push Image (zipkin) to target registries
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@f973043dc002b8e5a772c53e79441e6e1861e874 # v2.0.0
         with:
           src: openzipkin/zipkin:latest
           dst: |
             ghcr.io/${{ github.repository_owner }}/3rdparty/zipkin:latest
       - # copy 3rd party cassandra image from dockerhub to ghcr
         name: Push Image (cassandra) to target registries
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@f973043dc002b8e5a772c53e79441e6e1861e874 # v2.0.0
         with:
           src: cassandra:3.11.3
           dst: |

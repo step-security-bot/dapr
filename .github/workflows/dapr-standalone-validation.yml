@@ -29,6 +29,9 @@ on:
       - release-*
       - feature/*
 
+permissions:
+  contents: read
+
 jobs:
   validate-virt-mem:
     name: Standalone validations
@@ -40,18 +43,23 @@ jobs:
     steps:
       # This is a good example where we want to always compare against the latest stable release.
       # Pinning to a given Dapr version does not add any value in this workflow.
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Install latest Dapr CLI
         run: wget -q ${{ env.DAPR_INSTALL_URL }} -O - | /bin/bash
       - name: Initialize with latest Dapr runtime
         run: dapr init --slim
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
         with:
           repository: ${{ env.CHECKOUT_REPO }}
           ref: ${{ env.CHECKOUT_REF }}
       - name: Set up Go
         id: setup-go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
         with:
           go-version-file: "go.mod"
       - name: Build Dapr's sidecar

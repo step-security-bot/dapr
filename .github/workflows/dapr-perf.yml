@@ -54,6 +54,11 @@ jobs:
     name: Deploy test infrastructure
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Set up for scheduled test
         if: github.event_name != 'repository_dispatch'
         run: |
@@ -62,7 +67,7 @@ jobs:
         shell: bash
       - name: Parse test payload
         if: github.event_name == 'repository_dispatch'
-        uses: actions/github-script@v6.2.0
+        uses: actions/github-script@c713e510dbd7d213d92d41b7a7805a986f4c5c66 # v6.2.0
         with:
           github-token: ${{secrets.DAPR_BOT_TOKEN}}
           script: |
@@ -78,7 +83,7 @@ jobs:
             }
       - name: Create PR comment
         if: env.PR_NUMBER != ''
-        uses: artursouza/sticky-pull-request-comment@v2.2.0
+        uses: artursouza/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # v2.2.0
         with:
           header: ${{ github.run_id }}
           number: ${{ env.PR_NUMBER }}
@@ -93,13 +98,13 @@ jobs:
             Commit ref: ${{ env.CHECKOUT_REF }}
       - name: Check out code
         if: env.CHECKOUT_REPO != ''
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
         with:
           repository: ${{ env.CHECKOUT_REPO }}
           ref: ${{ env.CHECKOUT_REF }}
       - name: Login to Azure
         if: env.CHECKOUT_REPO != ''
-        uses: azure/login@v1
+        uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Build test prefix
@@ -157,7 +162,7 @@ jobs:
         shell: bash
       - name: Update PR comment for success
         if: success() && env.PR_NUMBER != ''
-        uses: artursouza/sticky-pull-request-comment@v2.2.0
+        uses: artursouza/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # v2.2.0
         with:
           header: ${{ github.run_id }}
           number: ${{ env.PR_NUMBER }}
@@ -171,7 +176,7 @@ jobs:
 
       - name: Update PR comment for failure
         if: failure() && env.PR_NUMBER != ''
-        uses: artursouza/sticky-pull-request-comment@v2.2.0
+        uses: artursouza/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # v2.2.0
         with:
           header: ${{ github.run_id }}
           number: ${{ env.PR_NUMBER }}
@@ -194,6 +199,11 @@ jobs:
       TARGET_OS: linux
       TARGET_ARCH: amd64
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Set up for scheduled test
         if: github.event_name != 'repository_dispatch'
         run: |
@@ -202,7 +212,7 @@ jobs:
         shell: bash
       - name: Parse test payload
         if: github.event_name == 'repository_dispatch'
-        uses: actions/github-script@v6.2.0
+        uses: actions/github-script@c713e510dbd7d213d92d41b7a7805a986f4c5c66 # v6.2.0
         with:
           github-token: ${{secrets.DAPR_BOT_TOKEN}}
           script: |
@@ -218,18 +228,18 @@ jobs:
             }
       - name: Check out code
         if: env.CHECKOUT_REPO != ''
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
         with:
           repository: ${{ env.CHECKOUT_REPO }}
           ref: ${{ env.CHECKOUT_REF }}
       - name: Set up Go
         id: setup-go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
         with:
           go-version-file: 'go.mod'
       - name: Cache Go modules (perf)
         if: env.CHECKOUT_REPO != '' && runner.os == 'Linux'
-        uses: actions/cache@v3
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
         with:
           path: |
             ~/.cache/go-build
@@ -239,7 +249,7 @@ jobs:
             ${{ runner.os }}-go-perf-
       - name: Login to Azure
         if: env.CHECKOUT_REPO != ''
-        uses: azure/login@v1
+        uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Login to cache registry
@@ -296,7 +306,7 @@ jobs:
         shell: bash
       - name: Update PR comment for success
         if: success() && env.PR_NUMBER != ''
-        uses: artursouza/sticky-pull-request-comment@v2.2.0
+        uses: artursouza/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # v2.2.0
         with:
           header: ${{ github.run_id }}
           number: ${{ env.PR_NUMBER }}
@@ -309,7 +319,7 @@ jobs:
             - Test image tag: `${{ env.DAPR_TEST_TAG }}`
       - name: Update PR comment for failure
         if: failure() && env.PR_NUMBER != ''
-        uses: artursouza/sticky-pull-request-comment@v2.2.0
+        uses: artursouza/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # v2.2.0
         with:
           header: ${{ github.run_id }}
           number: ${{ env.PR_NUMBER }}
@@ -333,6 +343,11 @@ jobs:
       AZURE_STORAGE_ACCESS_KEY: ${{ secrets.PERF_AZURE_STORAGE_KEY }}
       PULL_POLICY: IfNotPresent
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Setup test output
         run: |
           export TEST_OUTPUT_FILE_PREFIX=$GITHUB_WORKSPACE/test_report
@@ -351,7 +366,7 @@ jobs:
         shell: bash
       - name: Parse test payload
         if: github.event_name == 'repository_dispatch'
-        uses: actions/github-script@v6.2.0
+        uses: actions/github-script@c713e510dbd7d213d92d41b7a7805a986f4c5c66 # v6.2.0
         with:
           github-token: ${{secrets.DAPR_BOT_TOKEN}}
           script: |
@@ -372,18 +387,18 @@ jobs:
             }
       - name: Check out code
         if: env.CHECKOUT_REPO != ''
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
         with:
           repository: ${{ env.CHECKOUT_REPO }}
           ref: ${{ env.CHECKOUT_REF }}
       - name: Set up Go
         id: setup-go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
         with:
           go-version-file: 'go.mod'
       - name: Cache Go modules (perf-test)
         if: env.CHECKOUT_REPO != '' && runner.os == 'Linux'
-        uses: actions/cache@v3
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
         with:
           path: |
             ~/.cache/go-build
@@ -391,17 +406,17 @@ jobs:
           key: ${{ runner.os }}-go-perf-test-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-perf-test-
-      - uses: azure/setup-kubectl@v1
+      - uses: azure/setup-kubectl@a625ca209b0faaa8871dac8fb5f50ee4b4d22622 # v1
         with:
           version: ${{ env.KUBECTLVER }}
         id: install
       - name: Set up Helm ${{ env.HELMVER }}
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@18bc76811624f360dbd7f18c2d4ecb32c7b87bab # v1.1
         with:
           version: ${{ env.HELMVER }}
       - name: Login to Azure
         if: env.CHECKOUT_REPO != ''
-        uses: azure/login@v1
+        uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Build test prefix and set env vars
@@ -449,38 +464,38 @@ jobs:
           make save-dapr-control-plane-k8s-logs
       - name: Upload container logs
         if: always() && env.TEST_PREFIX != ''
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@0c366cb4fc8897159c94880f94b55bc716ad6a66 # master
         with:
           name: perf_container_logs
           path: ${{ env.DAPR_CONTAINER_LOG_PATH }}
       - name: Upload test logs
         if: always()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@0c366cb4fc8897159c94880f94b55bc716ad6a66 # master
         with:
           name: perf_test_logs
           path: ${{ env.DAPR_TEST_LOG_PATH }}
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@0c366cb4fc8897159c94880f94b55bc716ad6a66 # master
         with:
           #TODO: .json suffix can be removed from artifact name after test analytics scripts are updated
           name: test_perf.json
           path: ${{ env.TEST_OUTPUT_FILE_PREFIX }}_perf*.*
       - name: Add job test summary
         if: always()
-        uses: test-summary/action@v2
+        uses: test-summary/action@62bc5c68de2a6a0d02039763b8c754569df99e3f # v2.1
         with:
           paths: ${{ env.TEST_OUTPUT_FILE_PREFIX }}_perf*.xml
       - name: Add job test outputs
         if: always()
-        uses: actions/github-script@v6
+        uses: actions/github-script@98814c53be79b1d30f795b907e553d8679345975 # v6.4.0
         with:
           script: |
             const script = require('./.github/scripts/dapr_tests_summary.js')
             await script({core, glob})
       - name: Update PR comment for success
         if: success() && env.PR_NUMBER != ''
-        uses: artursouza/sticky-pull-request-comment@v2.2.0
+        uses: artursouza/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # v2.2.0
         with:
           header: ${{ github.run_id }}
           number: ${{ env.PR_NUMBER }}
@@ -493,7 +508,7 @@ jobs:
             - Test image tag: `${{ env.DAPR_TEST_TAG }}`
       - name: Update PR comment for failure
         if: failure() && env.PR_NUMBER != ''
-        uses: artursouza/sticky-pull-request-comment@v2.2.0
+        uses: artursouza/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # v2.2.0
         with:
           header: ${{ github.run_id }}
           number: ${{ env.PR_NUMBER }}
@@ -505,7 +520,7 @@ jobs:
             Please check the logs for details on the error.
       - name: Update PR comment for cancellation
         if: cancelled() && env.PR_NUMBER != ''
-        uses: artursouza/sticky-pull-request-comment@v2.2.0
+        uses: artursouza/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # v2.2.0
         with:
           header: ${{ github.run_id }}
           number: ${{ env.PR_NUMBER }}
@@ -523,8 +538,13 @@ jobs:
       - test-perf
     if: always()
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Build test prefix

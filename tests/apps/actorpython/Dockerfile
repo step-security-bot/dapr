@@ -11,7 +11,7 @@
 # limitations under the License.
 #
 
-FROM python:3.9-slim-buster
+FROM python:3.9-slim-buster@sha256:0ac1e4889c90d3117680b33cbdd397e3d95098b4c6bcff8600035fa5343527ed
 
 WORKDIR /app
 COPY . . 

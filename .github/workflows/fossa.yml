@@ -26,6 +26,9 @@ on:
       - release-*
       - feature/*
   workflow_dispatch: {}
+permissions:
+  contents: read
+
 jobs:
   fossa-scan:
     if: github.repository_owner == 'dapr' # FOSSA is not intended to run on forks.
@@ -33,17 +36,22 @@ jobs:
     env:
       FOSSA_API_KEY: b88e1f4287c3108c8751bf106fb46db6 # This is a push-only token that is safe to be exposed.
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: "Checkout code"
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
 
       - name: "Run FOSSA Scan"
-        uses: fossas/fossa-action@v1.1.0 # Use a specific version if locking is preferred
+        uses: fossas/fossa-action@5913e730490ebf75ae47b59687b7e590289eed92 # v1.1.0 # Use a specific version if locking is preferred
         with:
           api-key: ${{ env.FOSSA_API_KEY }}
 
 # REMOVE THIS STEP WHICH HAS BEEN FAILING DUE TO FOSSA SERVER ISSUES - VIEW RESULTS IN FOSSA PORTAL INSTEAD
 #      - name: "Run FOSSA Test"
-#        uses: fossas/fossa-action@v1.1.0 # Use a specific version if locking is preferred
+#        uses: fossas/fossa-action@5913e730490ebf75ae47b59687b7e590289eed92 # v1.1.0 # Use a specific version if locking is preferred
 #        with:
 #          api-key: ${{ env.FOSSA_API_KEY }}
 #          run-tests: true

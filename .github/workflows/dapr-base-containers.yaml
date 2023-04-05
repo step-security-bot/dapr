@@ -34,6 +34,11 @@ jobs:
       WINDOWS_VERSION: ${{ matrix.windows-version }}
       TARGET_OS: windows
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Set up for manual runs
         if: github.event_name != 'repository_dispatch'
         run: |
@@ -42,7 +47,7 @@ jobs:
         shell: bash
       - name: Parse event payload
         if: github.event_name == 'repository_dispatch'
-        uses: actions/github-script@0.3.0
+        uses: actions/github-script@9f3a1f13430422c9dc3079464b4161c4de25fc42 # 0.3.0
         with:
           github-token: ${{secrets.DAPR_BOT_TOKEN}}
           script: |
@@ -56,7 +61,7 @@ jobs:
             }
       - name: Check out dapr
         if: env.CHECKOUT_REPO != ''
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
         with:
           repository: ${{ env.CHECKOUT_REPO }}
           ref: ${{ env.CHECKOUT_REF }}
@@ -74,7 +79,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_REGISTRY_ID }} -p ${{ secrets.DOCKER_REGISTRY_PASS }}
       - name: GitHub container registry login
         if: env.CHECKOUT_REPO != ''
-        uses: docker/login-action@v2
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}

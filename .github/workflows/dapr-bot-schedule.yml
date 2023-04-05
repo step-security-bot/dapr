@@ -17,14 +17,22 @@ on:
   schedule:
     - cron: '*/10 * * * *'
   workflow_dispatch:
+permissions:
+  contents: read
+
 jobs:
   automerge:
     if: github.repository_owner == 'dapr'
     name: Automerge and update PRs.
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
       - name: Install dependencies
         run: pip install PyGithub
       - name: Automerge and update
@@ -36,8 +44,13 @@ jobs:
     name: Prune Stale
     runs-on: ubuntu-latest
     steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+      with:
+        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
     - name: Prune Stale
-      uses: actions/stale@v7.0.0
+      uses: actions/stale@6f05e4244c9a0b2ed3401882b05d701dd0a7289b # v7.0.0
       with:
         repo-token: ${{ secrets.DAPR_BOT_TOKEN }}
         days-before-pr-stale: 60

@@ -27,6 +27,9 @@ defaults:
   run:
     shell: bash
 
+permissions:
+  contents: read
+
 jobs:
   # This workflow runs our e2e tests in a local KinD cluster. Since it
   # does not required a paid cluster and special credentials, it does
@@ -80,11 +83,16 @@ jobs:
         - k8s-version: v1.23.13
           mode: non-ha
     steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+      with:
+        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
     - name: Check out code
-      uses: actions/checkout@v3
+      uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
     - name: Set up Go
       id: setup-go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
       with:
         go-version-file: 'go.mod'
     - name: Configure KinD
@@ -122,7 +130,7 @@ jobs:
         echo "DAPR_TEST_LOG_PATH=$GITHUB_WORKSPACE/test_logs/${{ matrix.k8s-version }}_${{ matrix.mode }}" >> $GITHUB_ENV
 
     - name: Create KinD Cluster
-      uses: helm/kind-action@v1.5.0
+      uses: helm/kind-action@d8ccf8fb623ce1bb360ae2f45f323d9d5c5e9f00 # v1.5.0
       with:
         config: kind.yaml
         cluster_name: kind
@@ -151,7 +159,7 @@ jobs:
         docker network connect "kind" $REGISTRY_NAME
 
     - name: Setup Helm
-      uses: azure/setup-helm@v1
+      uses: azure/setup-helm@18bc76811624f360dbd7f18c2d4ecb32c7b87bab # v1.1
       with:
         version: v3.3.4
 
@@ -220,21 +228,21 @@ jobs:
 
     - name: Upload container logs
       if: always()
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@0c366cb4fc8897159c94880f94b55bc716ad6a66 # master
       with:
         name: ${{ matrix.k8s-version }}_${{ matrix.mode}}_container_logs
         path: ${{ env.DAPR_CONTAINER_LOG_PATH }}
 
     - name: Upload test logs
       if: always()
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@0c366cb4fc8897159c94880f94b55bc716ad6a66 # master
       with:
         name: ${{ matrix.k8s-version }}_${{ matrix.mode}}_test_logs
         path: ${{ env.DAPR_TEST_LOG_PATH }}
 
     - name: Upload test results
       if: always()
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@0c366cb4fc8897159c94880f94b55bc716ad6a66 # master
       with:
         #TODO: .json suffix can be removed from artifact name after test analytics scripts are updated
         name: ${{ matrix.k8s-version }}_${{ matrix.mode }}_test_e2e.json

@@ -1,0 +1,176 @@
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /.build-tools
+    schedule:
+      interval: daily
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /docker
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps
+    schedule:
+      interval: daily
+
+  - package-ecosystem: nuget
+    directory: /tests/apps/actordotnet
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/actordotnet
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/actorjava
+    schedule:
+      interval: daily
+
+  - package-ecosystem: maven
+    directory: /tests/apps/actorjava
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/actorload
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/actorload
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/actorphp
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/actorpython
+    schedule:
+      interval: daily
+
+  - package-ecosystem: pip
+    directory: /tests/apps/actorpython
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/perf/actor-activation-locker
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/perf/actor-activation-locker
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/perf/actorfeatures
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/perf/actorfeatures
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/perf/actorjava
+    schedule:
+      interval: daily
+
+  - package-ecosystem: maven
+    directory: /tests/apps/perf/actorjava
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/perf/k6-custom
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/perf/pubsub_subscribe_http
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/perf/service_invocation_grpc
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/perf/service_invocation_grpc
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/perf/service_invocation_http
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/perf/service_invocation_http
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tests/apps/perf/tester
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/perf/tester
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/pluggable_kafka-bindings
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/pluggable_redis-pubsub
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/pluggable_redis-statestore
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/resiliencyapp
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/resiliencyapp_grpc
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/service_invocation_grpc_proxy_client
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /tests/apps/service_invocation_grpc_proxy_server
+    schedule:
+      interval: daily
