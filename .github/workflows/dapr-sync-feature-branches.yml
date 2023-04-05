@@ -26,10 +26,15 @@ jobs:
       matrix:
         branch: [feature/workflows]
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Merge master -> ${{ matrix.branch }}
         # artursouza/merge-branch is a fork of devmasx/merge-branch 
         #   to minimize risk of a 3rd party repo running arbitrary code with our creds
-        uses: artursouza/merge-branch@v1.4.0
+        uses: artursouza/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f # v1.4.0
         with:
           type: now
           from_branch: master

@@ -1,4 +1,4 @@
-FROM php:8.0-cli
+FROM php:8.0-cli@sha256:45b42dc7958e1e35a5d0f5ce6b45aeea1d2129e2519fdf55154b7e84eb07c7e4
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN apt-get update && apt-get install -y wget git unzip && apt-get clean

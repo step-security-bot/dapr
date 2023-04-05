@@ -22,12 +22,20 @@ on:
   # Manual trigger
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   cleanup:
     runs-on: ubuntu-22.04
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2 # v1.4.7
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: "Clean E2E image cache"
